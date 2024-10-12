@@ -2,10 +2,10 @@
 
 This section covers the constants used for the creation of SPC control charts.
 
-## d2 and d3
+## get_d
 
-::: lost_spc.constants.d
+::: lost_spc.constants.get_d
 
-## c4
+## get_c4
 
-::: lost_spc.constants.c4
+::: lost_spc.constants.get_c4

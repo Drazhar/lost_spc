@@ -5,7 +5,7 @@ from scipy.special import gamma
 from ._d_table import _D_TABLE, D
 
 
-def d(m: int, sim_size: int = 10_000) -> D:
+def get_d(m: int, sim_size: int = 10_000) -> D:
     """Correction factors for the R and X control charts.
 
     Refer to
@@ -19,6 +19,13 @@ def d(m: int, sim_size: int = 10_000) -> D:
 
     Returns:
         Dataclass with the corrisponding d2 and d3 value.
+
+    Examples:
+        >>> d = get_d(5)
+        >>> d.d2
+        2.326
+        >>> d.d3
+        0.864
     """
     if m < 2:
         raise ValueError("The sample size m has to be >= 2.")
@@ -33,7 +40,7 @@ def d(m: int, sim_size: int = 10_000) -> D:
     return D(d2=d2, d3=d3)
 
 
-def c4(m: int) -> float:
+def get_c4(m: int) -> float:
     """Correction factor used for the s and corrisponding X control charts.
 
     Refer to
@@ -45,5 +52,9 @@ def c4(m: int) -> float:
 
     Returns:
         Calculated c4 value.
+
+    Examples:
+        >>> get_c4(5)
+        np.float64(0.9399856029866253)
     """
     return gamma(m / 2) / gamma((m - 1) / 2) * np.sqrt(2 / (m - 1))
