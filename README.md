@@ -1,3 +1,4 @@
 # (L)OST SPC
 
-blabla
+Refer to the [full documentation](https://drazhar.github.io/lost_spc/) for more details.
+
