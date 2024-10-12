@@ -5,8 +5,12 @@ from scipy.special import gamma
 from ._d_table import _D_TABLE, D
 
 
-def d(m: int, sim_size: int = 100_000) -> D:
+def d(m: int, sim_size: int = 10_000) -> D:
     """Correction factors for the R and X control charts.
+
+    Refer to
+    [Shewhart charts](http://spc.pages.gitlab.ost.ch/statistische-qualitaetskontrolle/cc_variable_data.html#die-shewhart-kontrollkarte)
+    for further reference.
 
     Args:
         m: Size of each sample.
@@ -14,7 +18,7 @@ def d(m: int, sim_size: int = 100_000) -> D:
                   predifined value is available.
 
     Returns:
-        D: Dataclass with the corrisponding d2 and d3 value.
+        Dataclass with the corrisponding d2 and d3 value.
     """
     if m < 2:
         raise ValueError("The sample size m has to be >= 2.")
@@ -32,10 +36,14 @@ def d(m: int, sim_size: int = 100_000) -> D:
 def c4(m: int) -> float:
     """Correction factor used for the s and corrisponding X control charts.
 
+    Refer to
+    http://spc.pages.gitlab.ost.ch/statistische-qualitaetskontrolle/cc_variable_data.html#s-karte
+    for further reference.
+
     Args:
         m: Size of each sample.
 
     Returns:
-        float: Calculated c4 value.
+        Calculated c4 value.
     """
     return gamma(m / 2) / gamma((m - 1) / 2) * np.sqrt(2 / (m - 1))
