@@ -1,17 +1,7 @@
-# Welcome to MkDocs
+# (L)OST SPC
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+This package provides utilities for statistical process control based on the course
+of the OST Buchs. Documentation for the statistical theory behind this package can
+be found here:
 
-## Commands
-
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+<http://spc.pages.gitlab.ost.ch/statistische-qualitaetskontrolle/intro.html>
