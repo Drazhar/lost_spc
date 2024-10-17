@@ -11,14 +11,13 @@ def d(m: int, sim_size: int = 10_000) -> D:
     Refer to
     [Shewhart charts](http://spc.pages.gitlab.ost.ch/statistische-qualitaetskontrolle/cc_variable_data.html#die-shewhart-kontrollkarte)
     for further reference.
-
     Args:
         m: Size of each sample.
         sim_size: Number of simulations performed to estimate d2 and d3 if no
                   predifined value is available.
 
     Returns:
-        Dataclass with the corrisponding d2 and d3 value.
+        D: Dataclass with the corrisponding d2 and d3 value.
     """
     if m < 2:
         raise ValueError("The sample size m has to be >= 2.")
@@ -35,11 +34,9 @@ def d(m: int, sim_size: int = 10_000) -> D:
 
 def c4(m: int) -> float:
     """Correction factor used for the s and corrisponding X control charts.
-
     Refer to
     http://spc.pages.gitlab.ost.ch/statistische-qualitaetskontrolle/cc_variable_data.html#s-karte
     for further reference.
-
     Args:
         m: Size of each sample.
 
