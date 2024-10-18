@@ -6,6 +6,7 @@ on:
       - main # Change this to your default branch if necessary
     paths:
       - "pyproject.toml" # Only trigger when pyproject.toml is changed
+  workflow_dispatch:
 
 jobs:
   publish:
