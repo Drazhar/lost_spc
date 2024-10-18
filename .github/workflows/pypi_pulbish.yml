@@ -1,0 +1,54 @@
+name: Publish to PyPI
+
+on:
+  push:
+    branches:
+      - main # Change this to your default branch if necessary
+    paths:
+      - "pyproject.toml" # Only trigger when pyproject.toml is changed
+
+jobs:
+  publish:
+    needs:
+      - build-deploy
+      - doctest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10" # Specify your Python version
+
+      # Install Poetry
+      - name: Install Poetry
+        run: curl -sSL https://install.python-poetry.org | python3 -
+
+      # Install project dependencies using Poetry
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Check for version change
+        id: version-check
+        run: |
+          current_version=$(poetry version -s)
+          git fetch origin main
+          previous_version=$(git show origin/main:pyproject.toml | grep version | sed 's/.*= "\(.*\)"/\1/')
+          if [ "$current_version" == "$previous_version" ]; then
+            echo "Version has not changed."
+            echo "::set-output name=publish::false"
+          else
+            echo "Version has changed from $previous_version to $current_version."
+            echo "::set-output name=publish::true"
+          fi
+
+      - name: Build and Publish
+        if: steps.version-check.outputs.publish == 'true'
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          poetry build
+          poetry publish --username $TWINE_USERNAME --password $TWINE_PASSWORD
