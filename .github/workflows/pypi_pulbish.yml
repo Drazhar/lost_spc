@@ -12,7 +12,7 @@ jobs:
   publish:
     needs:
       - build-deploy
-      - doctest
+      - doctests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

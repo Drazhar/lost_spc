@@ -8,8 +8,9 @@ on:
 
 jobs:
   build-deploy:
+    needs:
+      - doctests
     runs-on: ubuntu-latest
-
     steps:
       # Checkout the repository code
       - name: Checkout code

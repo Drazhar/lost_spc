@@ -8,7 +8,7 @@ on:
   pull_request:
     branches:
       - main
-      - doctest
+      - doctests
   workflow_dispatch:
 
 jobs:
