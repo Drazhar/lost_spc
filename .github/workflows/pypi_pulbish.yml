@@ -9,9 +9,6 @@ on:
 
 jobs:
   publish:
-    needs:
-      - build-deploy
-      - doctests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
