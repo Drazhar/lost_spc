@@ -2,13 +2,7 @@ name: Doctests
 
 on:
   push:
-    branches:
-      - main
-      - doctest
   pull_request:
-    branches:
-      - main
-      - doctests
   workflow_dispatch:
 
 jobs:
