@@ -1,4 +1,4 @@
-name: Doctests
+name: Pytest
 
 on:
   push:
@@ -25,4 +25,4 @@ jobs:
         run: poetry install --with dev
 
       - name: Run doctests
-        run: poetry run python doctests.py # Run the doctests
+        run: poetry run pytest

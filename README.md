@@ -17,5 +17,5 @@ mkdocs serve
 To execute the tests for the examples in the documentation run:
 
 ```bash
-python doctests.py
+pytest
 ```
