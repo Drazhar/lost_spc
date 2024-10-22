@@ -12,9 +12,9 @@ To run mkdocs locally, you have to run the following command in the terminal:
 mkdocs serve
 ```
 
-### doctest
+### pytest
 
-To execute the tests for the examples in the documentation run:
+To execute unit tests from the `tests` folder and the examples from the docstrings:
 
 ```bash
 pytest
