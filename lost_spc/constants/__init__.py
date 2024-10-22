@@ -5,6 +5,11 @@ from scipy.special import gamma
 from ._d_table import _D_TABLE, D
 
 
+def _check_sample_size(m: int):
+    if m < 2:
+        raise ValueError("The sample size m has to be >= 2.")
+
+
 def get_d(m: int, sim_size: int = 10_000) -> D:
     """Correction factors for the R and X control charts.
 
@@ -27,8 +32,7 @@ def get_d(m: int, sim_size: int = 10_000) -> D:
         >>> d.d3
         0.864
     """
-    if m < 2:
-        raise ValueError("The sample size m has to be >= 2.")
+    _check_sample_size(m)
 
     if m in _D_TABLE:
         return _D_TABLE[m]
@@ -57,4 +61,6 @@ def get_c4(m: int) -> float:
         >>> get_c4(5)
         np.float64(0.9399856029866253)
     """
+    _check_sample_size(m)
+
     return gamma(m / 2) / gamma((m - 1) / 2) * np.sqrt(2 / (m - 1))
