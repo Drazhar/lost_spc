@@ -11,10 +11,9 @@ python = "^3.10"
 numpy = "^2.1.2"
 scipy = "^1.14.1"
 
-
 [tool.poetry.group.dev.dependencies]
-mkdocs = "^1.6.1"
 mkdocstrings-python = "^1.11.1"
+mkdocs-material = "^9.5.42"
 
 [build-system]
 requires = ["poetry-core"]
