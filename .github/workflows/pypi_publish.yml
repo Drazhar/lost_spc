@@ -1,0 +1,34 @@
+name: Publish to PyPI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10" # Specify your Python version
+
+      # Install Poetry
+      - name: Install Poetry
+        run: curl -sSL https://install.python-poetry.org | python3 -
+
+      # Install project dependencies using Poetry
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Build and Publish
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          poetry build
+          poetry publish --username $TWINE_USERNAME --password $TWINE_PASSWORD
