@@ -1,7 +1,7 @@
 from dataclasses import dataclass
+from typing import Union
 
 from numpy import floating
-from typing import Union
 
 
 @dataclass

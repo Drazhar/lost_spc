@@ -1,4 +1,4 @@
-name: Pytest
+name: CodeChecks
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.10" # Specify the Python version you want to use
+          python-version: "3.10"
 
       # Install Poetry
       - name: Install Poetry
@@ -23,6 +23,21 @@ jobs:
       # Install project dependencies using Poetry
       - name: Install dependencies
         run: poetry install --with dev
+
+      - name: Isort
+        run: poetry run isort --profile black .
+
+      - name: Black
+        run: poetry run black --check --diff .
+
+      - name: flake8
+        run: poetry run flake8 -v --doctests lost_spc
+
+      - name: pyright
+        run: poetry run basedpyright
+
+      - name: Code complexity
+        run: poetry run complexipy .
 
       - name: Run doctests
         run: poetry run pytest
