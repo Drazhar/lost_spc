@@ -80,7 +80,8 @@ class SampleSize:
 
 
 def get_sample_size(data: np.ndarray) -> SampleSize:
-    """Returns the sample size (number of columns) and the number of rows (probes) for a NumPy array dataset.
+    """Returns the sample size (number of columns) and the number of rows (probes)
+    for a NumPy array dataset.
 
     Args:
         data (np.ndarray): 2D NumPy array of numerical values.

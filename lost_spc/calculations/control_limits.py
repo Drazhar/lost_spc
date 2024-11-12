@@ -9,11 +9,13 @@ def calculate_control_limits(data: np.ndarray, chart_type: str = "X_R", z: int =
 
     Args:
         data (np.ndarray): The data for which the control limits are to be calculated.
-        chart_type (str): Type of chart ('X_R', 'R', 'S', 'X_S', etc.). Determines the control limits' calculations.
+        chart_type (str): Type of chart ('X_R', 'R', 'S', 'X_S', etc.). Determines
+                          the control limits' calculations.
         z (int): The number of standard deviations for control limits. Default is 3.
 
     Returns:
-        dict: A dictionary containing the center line (CL), upper control limit (UCL), and lower control limit (LCL).
+        dict: A dictionary containing the center line (CL), upper control limit (UCL),
+              and lower control limit (LCL).
 
     Examples:
         >>> data = np.array([[10, 12, 14], [15, 16, 17]])
