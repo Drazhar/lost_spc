@@ -1,4 +1,4 @@
-name: Pytest
+name: CodeChecks
 
 on:
   push:
@@ -23,6 +23,18 @@ jobs:
       # Install project dependencies using Poetry
       - name: Install dependencies
         run: poetry install --with dev
+
+      - name: Isort
+        run: poetry run isort --profile black .
+
+      - name: Black
+        run: poetry run black --check --diff .
+
+      - name: flake8
+        run: poetry run flake8 -v --doctests lost_spc
+
+      - name: pyright
+        run: poetry run basedpyright
 
       - name: Run doctests
         run: poetry run pytest
