@@ -9,7 +9,7 @@ def calculate_control_limits(data: np.ndarray, chart_type: str = "X_R", z: int =
 
     Args:
         data (np.ndarray): The data for which the control limits are to be calculated.
-        chart_type (str): Type of chart ('X_R', 'R', 'S', 'X_S', etc.). Determines
+        chart_type (str): Type of chart ('X_R', 'R', 'S' or 'X_S'). Determines
                           the control limits' calculations.
         z (int): The number of standard deviations for control limits. Default is 3.
 
