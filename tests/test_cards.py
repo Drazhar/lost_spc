@@ -3,8 +3,9 @@ import lost_spc.calculations.spc_values as val
 import lost_spc.constants as const
 import lost_spc.calculations.control_limits as limits
 import lost_spc.plots as plt
+from pathlib import Path
 
-df = ut.load_data(".\\tests\\vane.txt", "csv", sep=" ", header=None)
+df = ut.load_data(str(Path("./tests/vane.txt")), "csv", sep=" ", header=None)
 print(df.head())
 array = ut.data_to_array(df)
 sample_size = ut.get_sample_size(array)
