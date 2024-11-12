@@ -36,5 +36,8 @@ jobs:
       - name: pyright
         run: poetry run basedpyright
 
+      - name: Code complexity
+        run: poetry run complexipy .
+
       - name: Run doctests
         run: poetry run pytest
