@@ -33,7 +33,7 @@ class R:
         else:
             cal_samples = None
         R_i = calculate_ranges(X)
-        shewhart_card(
+        fig = shewhart_card(
             self.UCL,
             self.CL,
             self.LCL,
@@ -43,6 +43,7 @@ class R:
             ylabel=r"$R_i$",
             restrict_zero=self.restrict_zero,
         )
+        return fig
 
 
 class X_R:
@@ -69,7 +70,7 @@ class X_R:
         else:
             cal_samples = None
         X_mean = calculate_means(X)
-        shewhart_card(
+        fig = shewhart_card(
             self.UCL,
             self.CL,
             self.LCL,
@@ -79,6 +80,7 @@ class X_R:
             ylabel=r"$\bar{X}_i$",
             restrict_zero=self.restrict_zero,
         )
+        return fig
 
 
 class S:
@@ -104,7 +106,7 @@ class S:
             cal_samples = self.S_i_cal
         else:
             cal_samples = None
-        S_i = calculate_standard_deviations(X)
+        fig = S_i = calculate_standard_deviations(X)
         shewhart_card(
             self.UCL,
             self.CL,
@@ -115,6 +117,7 @@ class S:
             ylabel=r"$S_i$",
             restrict_zero=self.restrict_zero,
         )
+        return fig
 
 
 class X_S:
@@ -140,7 +143,7 @@ class X_S:
             cal_samples = self.X_mean_cal
         else:
             cal_samples = None
-        X_mean = calculate_means(X)
+        fig = X_mean = calculate_means(X)
         shewhart_card(
             self.UCL,
             self.CL,
@@ -151,3 +154,4 @@ class X_S:
             ylabel=r"$\bar{X}_i$",
             restrict_zero=self.restrict_zero,
         )
+        return fig
