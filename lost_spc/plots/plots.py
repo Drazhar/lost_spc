@@ -61,4 +61,4 @@ def shewhart_card(
     plt.xlabel("Sample")
     plt.ylabel(ylabel)
     plt.grid()
-    plt.show()
+    return plt.gcf()

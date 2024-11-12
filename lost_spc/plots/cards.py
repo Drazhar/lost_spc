@@ -1,11 +1,12 @@
-from .plots import shewhart_card
 from lost_spc.calculations import (
     calculate_control_limits,
-    calculate_ranges,
     calculate_means,
+    calculate_ranges,
     calculate_standard_deviations,
 )
 from lost_spc.utils import get_sample_size
+
+from .plots import shewhart_card
 
 
 class R:

@@ -2,12 +2,14 @@ import lost_spc.utils as ut
 import lost_spc.calculations.spc_values as val
 import lost_spc.constants as const
 import lost_spc.calculations.control_limits as limits
-import lost_spc.plots as plt
+import lost_spc.plots as plot
 from pathlib import Path
+import pandas as pd
+import matplotlib.pyplot as plt
 
-df = ut.load_data(str(Path("./tests/vane.txt")), "csv", sep=" ", header=None)
+df = pd.read_csv(str(Path("./tests/vane.txt")), sep=" ", header=None)
 print(df.head())
-array = ut.data_to_array(df)
+array = df.to_numpy()
 sample_size = ut.get_sample_size(array)
 n = sample_size.n
 m = sample_size.m
@@ -37,9 +39,11 @@ print("R-Karte CL: ", CL)
 print("R-Karte LCL: ", LCL)
 
 # plots
-plt.shewhart_card(UCL, CL, LCL, R, title="R-chart", ylabel=r"$R_i$")
+shewhart_R_Card = plot.shewhart_card(UCL, CL, LCL, R, title="R-chart", ylabel=r"$R_i$")
+plt.show()
 
 # cards
-rchart = plt.cards.R(array)
+rchart = plot.cards.R(array)
 rchart.fit(array)
 rchart.transform(array)
+plt.show()
