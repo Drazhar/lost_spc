@@ -14,8 +14,9 @@ def get_d(m: int, sim_size: int = 10_000) -> D:
     """Correction factors for the R and X control charts.
 
     Refer to
-    [Shewhart charts](http://spc.pages.gitlab.ost.ch/statistische-qualitaetskontrolle/cc_variable_data.html#die-shewhart-kontrollkarte)
-    for further reference.
+    [Shewhart charts](http://spc.pages.gitlab.ost.ch/statistische-\
+    qualitaetskontrolle/cc_variable_data.html#die-shewhart-kontrollkarte) for
+    further reference.
 
     Args:
         m: Size of each sample.
