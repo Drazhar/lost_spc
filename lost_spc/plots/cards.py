@@ -106,8 +106,8 @@ class S:
             cal_samples = self.S_i_cal
         else:
             cal_samples = None
-        fig = S_i = calculate_standard_deviations(X)
-        shewhart_card(
+        S_i = calculate_standard_deviations(X)
+        fig = shewhart_card(
             self.UCL,
             self.CL,
             self.LCL,
