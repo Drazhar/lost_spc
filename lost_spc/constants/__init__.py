@@ -62,6 +62,9 @@ def get_c4(m: int) -> float:
         >>> get_c4(5)
         np.float64(0.9399856029866253)
     """
+    if m > 343:
+        return 1
+
     _check_sample_size(m)
 
     return gamma(m / 2) / gamma((m - 1) / 2) * np.sqrt(2 / (m - 1))
