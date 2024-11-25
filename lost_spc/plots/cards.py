@@ -27,7 +27,7 @@ class R:
         if self.plot_calibration_data:
             self.R_i_cal = calculate_ranges(X)
 
-    def transform(self, X):
+    def transform(self, X, ax=None):
         if self.plot_calibration_data:
             cal_samples = self.R_i_cal
         else:
@@ -42,6 +42,7 @@ class R:
             title=r"$R$-Karte",
             ylabel=r"$R_i$",
             restrict_zero=self.restrict_zero,
+            ax=ax,
         )
         return fig
 
@@ -64,7 +65,7 @@ class X_R:
         if self.plot_calibration_data:
             self.X_mean_cal = calculate_means(X)
 
-    def transform(self, X):
+    def transform(self, X, ax=None):
         if self.plot_calibration_data:
             cal_samples = self.X_mean_cal
         else:
@@ -79,6 +80,7 @@ class X_R:
             title=r"$\bar{X}$-Karte",
             ylabel=r"$\bar{X}_i$",
             restrict_zero=self.restrict_zero,
+            ax=ax,
         )
         return fig
 
@@ -101,7 +103,7 @@ class S:
         if self.plot_calibration_data:
             self.S_i_cal = calculate_standard_deviations(X)
 
-    def transform(self, X):
+    def transform(self, X, ax=None):
         if self.plot_calibration_data:
             cal_samples = self.S_i_cal
         else:
@@ -116,6 +118,7 @@ class S:
             title=r"$S$-Karte",
             ylabel=r"$S_i$",
             restrict_zero=self.restrict_zero,
+            ax=ax,
         )
         return fig
 
@@ -138,7 +141,7 @@ class X_S:
         if self.plot_calibration_data:
             self.X_mean_cal = calculate_means(X)
 
-    def transform(self, X):
+    def transform(self, X, ax=None):
         if self.plot_calibration_data:
             cal_samples = self.X_mean_cal
         else:
@@ -153,5 +156,6 @@ class X_S:
             title=r"$\bar{X}$-Karte",
             ylabel=r"$\bar{X}_i$",
             restrict_zero=self.restrict_zero,
+            ax=ax,
         )
         return fig

@@ -1,11 +1,13 @@
-import lost_spc.utils as ut
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+import lost_spc.calculations.control_limits as limits
 import lost_spc.calculations.spc_values as val
 import lost_spc.constants as const
-import lost_spc.calculations.control_limits as limits
 import lost_spc.plots as plot
-from pathlib import Path
-import pandas as pd
-import matplotlib.pyplot as plt
+import lost_spc.utils as ut
 
 df = pd.read_csv(str(Path("./tests/vane.txt")), sep=" ", header=None)
 print(df.head())
@@ -39,11 +41,17 @@ print("R-Karte CL: ", CL)
 print("R-Karte LCL: ", LCL)
 
 # plots
-shewhart_R_Card = plot.shewhart_card(UCL, CL, LCL, R, title="R-chart", ylabel=r"$R_i$")
-plt.show()
+# Erstelle eine Figur mit Subplots
+fig, axes = plt.subplots(1, 2, figsize=(8, 10))
 
-# cards
+# Erster Subplot: R-Chart
+plot.shewhart_card(UCL, CL, LCL, R, title="R-chart", ylabel=r"$R_i$", ax=axes[0])
+
+# Zweiter Subplot: R-Karte aus der Klasse
 rchart = plot.cards.R(array)
 rchart.fit(array)
-rchart.transform(array)
+rchart.transform(array, ax=axes[1])
+
+# Subplots optimieren und anzeigen
+plt.tight_layout()
 plt.show()

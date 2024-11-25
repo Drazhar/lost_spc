@@ -11,11 +11,10 @@ def shewhart_card(
     ylabel="",
     fill_alpha=0.07,
     restrict_zero=True,
+    ax=None,
 ):
     """
-    Plots a shewhart_card.
-
-    restict_zero: Switch to restrict the lower control limit to 0 if it's below.
+    Plots a shewhart_card. Draws either on an existing axis (ax) or creates a new figure.
     """
     if restrict_zero:
         if LCL < 0:
@@ -26,10 +25,15 @@ def shewhart_card(
     else:
         x_min = 0
 
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = None
+
     # Draw control limits
-    plt.hlines([UCL, CL, LCL], x_min, len(samples) - 1, colors=["black"], alpha=0.8)
+    ax.hlines([UCL, CL, LCL], x_min, len(samples) - 1, colors=["black"], alpha=0.8)
     area_height = (UCL - CL) / 3
-    plt.hlines(
+    ax.hlines(
         [CL + area_height, CL + 2 * area_height, CL - area_height, CL - 2 * area_height],
         x_min,
         len(samples) - 1,
@@ -40,25 +44,22 @@ def shewhart_card(
 
     # Add some coloring for the areas
     width = (x_min, len(samples) - 1)
-    plt.fill_between(width, CL - area_height, CL + area_height, alpha=fill_alpha, color="green")
-    plt.fill_between(
-        width, CL + area_height, CL + 2 * area_height, alpha=fill_alpha, color="yellow"
-    )
-    plt.fill_between(
-        width, CL - area_height, CL - 2 * area_height, alpha=fill_alpha, color="yellow"
-    )
-    plt.fill_between(width, CL + 2 * area_height, UCL, alpha=fill_alpha, color="red")
-    plt.fill_between(width, CL - 2 * area_height, LCL, alpha=fill_alpha, color="red")
+    ax.fill_between(width, CL - area_height, CL + area_height, alpha=fill_alpha, color="green")
+    ax.fill_between(width, CL + area_height, CL + 2 * area_height, alpha=fill_alpha, color="yellow")
+    ax.fill_between(width, CL - area_height, CL - 2 * area_height, alpha=fill_alpha, color="yellow")
+    ax.fill_between(width, CL + 2 * area_height, UCL, alpha=fill_alpha, color="red")
+    ax.fill_between(width, CL - 2 * area_height, LCL, alpha=fill_alpha, color="red")
 
     # Plot points
     if calibration_samples is not None:
-        plt.vlines(0, ymin=LCL, ymax=UCL, colors=["red"], linestyles="dotted", alpha=0.6)
-        plt.plot(range(-len(calibration_samples), 0, 1), calibration_samples, "o-")
-    plt.plot(range(len(samples)), samples, "o-")
+        ax.vlines(0, ymin=LCL, ymax=UCL, colors=["red"], linestyles="dotted", alpha=0.6)
+        ax.plot(range(-len(calibration_samples), 0, 1), calibration_samples, "o-")
+    ax.plot(range(len(samples)), samples, "o-")
 
     # Plot setup
-    plt.title(title)
-    plt.xlabel("Sample")
-    plt.ylabel(ylabel)
-    plt.grid()
-    return plt.gcf()
+    ax.set_title(title)
+    ax.set_xlabel("Sample")
+    ax.set_ylabel(ylabel)
+    ax.grid()
+
+    return fig if fig else ax
