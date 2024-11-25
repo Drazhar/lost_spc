@@ -55,3 +55,11 @@ rchart.transform(array, ax=axes[1])
 # Subplots optimieren und anzeigen
 plt.tight_layout()
 plt.show()
+
+plot.plots.plot_histogram_normal(array.flatten())
+plt.show()
+
+plot.plots.plot_qq_plot(array.flatten())
+plt.show()
+
+print(limits.get_confidence_interval_cp(val.calculate_cp(UCL, LCL, std.mean()), array, 0.95))

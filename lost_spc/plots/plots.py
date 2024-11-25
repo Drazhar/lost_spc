@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import numpy as np
+import scipy.stats as st
 
 
 def shewhart_card(
@@ -61,5 +63,95 @@ def shewhart_card(
     ax.set_xlabel("Sample")
     ax.set_ylabel(ylabel)
     ax.grid()
+
+    return fig if fig else ax
+
+
+def plot_histogram_normal(
+    data,
+    bins=20,
+    title="Histogram with Normal Distribution Overlay",
+    xlabel="Data",
+    ylabel="Density",
+    alpha=0.6,
+    color="blue",
+    fill_color="red",
+    grid_alpha=0.4,
+    ax=None,
+):
+    """
+    Plots a histogram of the data with an overlay of a fitted normal distribution.
+    Draws either on an existing axis (ax) or creates a new figure.
+
+    Args:
+        data (np.ndarray): A 1D array of numerical data to be plotted.
+        bins (int): Number of bins for the histogram.
+        alpha (float): Transparency for the histogram bars.
+        color (str): Color for the histogram bars.
+        fill_color (str): Color for the normal distribution line.
+        grid_alpha (float): Transparency for the grid lines.
+        ax (matplotlib.axes.Axes, optional): Existing axes to draw on.
+
+    Returns:
+        matplotlib.figure.Figure or matplotlib.axes.Axes: The figure or axes object.
+    """
+    mu = data.mean()
+    sigma = data.std(ddof=1)
+    x = np.linspace(mu - 4 * sigma, mu + 4 * sigma, 100)
+
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = None
+
+    # Plot histogram
+    ax.hist(data, bins=bins, density=True, alpha=alpha, color=color, label="Data")
+
+    # Plot normal distribution
+    ax.plot(x, st.norm.pdf(x, loc=mu, scale=sigma), color=fill_color, label="Normal PDF")
+
+    # Customize plot
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.grid(alpha=grid_alpha)
+    ax.legend()
+
+    return fig if fig else ax
+
+
+def plot_qq_plot(
+    data,
+    title="QQ-Plot",
+    xlabel="Theoretical Quantiles",
+    ylabel="Sample Quantiles",
+    grid_alpha=0.4,
+    ax=None,
+):
+    """
+    Plots a QQ-Plot to check for normality.
+    Draws either on an existing axis (ax) or creates a new figure.
+
+    Args:
+          data (np.ndarray): A 1D array of numerical data to be plotted.
+        grid_alpha (float): Transparency for the grid lines.
+        ax (matplotlib.axes.Axes, optional): Existing axes to draw on.
+
+    Returns:
+        matplotlib.figure.Figure or matplotlib.axes.Axes: The figure or axes object.
+    """
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = None
+
+    # Generate QQ-Plot
+    st.probplot(data, dist="norm", plot=ax)
+
+    # Customize plot
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.grid(alpha=grid_alpha)
 
     return fig if fig else ax
