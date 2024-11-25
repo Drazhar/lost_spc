@@ -188,3 +188,54 @@ def ARL_R(**kwargs) -> np.float64:
         raise ValueError("Either lambda and m or oc_r have to be supplied!")
 
     return np.float64(1 / (1 - operational_characteristic))
+
+
+def calculate_cp(usl: float, lsl: float, sigma: float, z: float = 6) -> float:
+    """
+    Calculates the Process Capability Index (Cp) with a customizable factor.
+
+    Args:
+        usl (float): Upper Specification Limit.
+        lsl (float): Lower Specification Limit.
+        std_dev (float): Standard deviation of the process.
+        factor (float): Multiplication factor for the standard deviation (default is 6).
+
+    Returns:
+        float: Cp value.
+
+    Raises:
+        ValueError: If the standard deviation is less than or equal to 0.
+
+    Examples:
+        >>> calculate_cp(10, 2, 1, z=6)
+        1.3333333333333333
+        >>> calculate_cp(10, 2, 1, z=4)
+        2.0
+    """
+
+    return (usl - lsl) / (z * sigma)
+
+
+def calculate_cpk(usl: float, lsl: float, mu: float, sigma: float) -> float:
+    """
+    Calculates the Critical Process Capability Index (Cpk).
+
+    Args:
+        usl (float): Upper Specification Limit.
+        lsl (float): Lower Specification Limit.
+        mean (float): Process mean.
+        std_dev (float): Standard deviation of the process.
+
+    Returns:
+        float: Cpk value.
+
+    Raises:
+        ValueError: If the standard deviation is less than or equal to 0.
+
+    Examples:
+        >>> calculate_cpk(10, 3, 6, 1)
+        1.0
+    """
+    cp_upper = (usl - mu) / (3 * sigma)
+    cp_lower = (mu - lsl) / (3 * sigma)
+    return min(cp_upper, cp_lower)

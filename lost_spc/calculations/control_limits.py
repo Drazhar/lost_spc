@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.stats as st
 
 from lost_spc.constants import get_c4, get_d
 from lost_spc.utils import get_sample_size
@@ -75,3 +76,41 @@ def calculate_control_limits(data: np.ndarray, chart_type: str = "X_R", z: int =
         raise ValueError(f"Unsupported chart type: {chart_type}")
 
     return {"CL": float(cl), "UCL": float(ucl), "LCL": float(lcl)}
+
+
+def get_confidence_interval_cp(Cp, data, confidence_level=0.95):
+    """
+    Calculate the confidence interval for Cp based on variability.
+
+    Args:
+        Cp (float): Process capability index.
+        sigma (float): Standard deviation of the process.
+        confidence_level (float): Confidence level (default is 95%).
+
+    Returns:
+        tuple: (Cp_low, Cp_up), the lower and upper bounds of the confidence interval.
+    """
+    sample_size = get_sample_size(data)
+    m = sample_size.m
+    n = sample_size.n
+
+    total_sample_size = n * m
+
+    sigma = np.mean(calculate_standard_deviations(data))
+
+    # Dynamically calculate z-value based on confidence level
+    z = st.norm.ppf(1 - (1 - confidence_level) / 2)
+
+    # Variability adjustment factor
+    c4 = get_c4(m)
+    fac = z * np.sqrt(1 - c4**2) / np.sqrt(total_sample_size)
+
+    # Adjusted standard deviation bounds
+    sigma_low = sigma * (1 - fac)
+    sigma_high = sigma * (1 + fac)
+
+    # Confidence interval for Cp
+    Cp_low = Cp / (1 + fac)
+    Cp_high = Cp / (1 - fac)
+
+    return sigma_low, sigma_high, Cp_low, Cp_high
