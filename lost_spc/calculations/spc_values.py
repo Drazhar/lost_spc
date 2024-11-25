@@ -190,6 +190,30 @@ def ARL_R(**kwargs) -> np.float64:
     return np.float64(1 / (1 - operational_characteristic))
 
 
+def calculate_process_capability(lsl: float, usl: float, mu: float, sigma: float) -> np.ndarray:
+    """
+    Calculates the probability that the process is within the specification limits (LSL and USL).
+
+    Args:
+        lsl (float): Lower Specification Limit.
+        usl (float): Upper Specification Limit.
+        mu (float): Process mean.
+        sigma (float): Process standard deviation.
+
+    Returns:
+        float: Probability that the process lies within the limits.
+
+    Examples:
+        >>> calculate_process_capability(2.0, 8.0, 5.0, 1.0)
+        np.float64(0.9973002039367398)
+        >>> calculate_process_capability(0.0, 10.0, 5.0, 2.0)
+        np.float64(0.9875806693484477)
+    """
+    lower_prob = st.norm.cdf((lsl - mu) / sigma)
+    upper_prob = st.norm.cdf((usl - mu) / sigma)
+    return upper_prob - lower_prob
+
+
 def calculate_cp(usl: float, lsl: float, sigma: float, z: float = 6) -> float:
     """
     Calculates the Process Capability Index (Cp) with a customizable factor.

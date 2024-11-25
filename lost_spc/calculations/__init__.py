@@ -11,6 +11,7 @@ from .spc_values import (
     oc_r,
     power,
     power_R,
+    calculate_process_capability,
 )
 
 __all__ = [
@@ -27,4 +28,5 @@ __all__ = [
     "ARL_R",
     "calculate_cp",
     "calculate_cpk",
+    "calculate_process_capability",
 ]
