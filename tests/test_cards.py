@@ -48,7 +48,7 @@ fig, axes = plt.subplots(1, 2, figsize=(8, 10))
 plot.shewhart_card(UCL, CL, LCL, R, title="R-chart", ylabel=r"$R_i$", ax=axes[0])
 
 # Zweiter Subplot: R-Karte aus der Klasse
-rchart = plot.cards.R(array)
+rchart = plot.cards.R()
 rchart.fit(array)
 rchart.transform(array, ax=axes[1])
 
@@ -63,3 +63,9 @@ plot.plots.plot_qq_plot(array.flatten())
 plt.show()
 
 print(limits.get_confidence_interval_cp(val.calculate_cp(UCL, LCL, std.mean()), array, 0.95))
+
+array.reshape(-1)
+ewmachart = plot.cards.EWMA(lambda_=0.2, plot_calibration_data=True)
+ewmachart.fit(array)
+ewmachart.transform(array + 2)
+plt.show()

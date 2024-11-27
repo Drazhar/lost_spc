@@ -4,14 +4,15 @@ from .spc_values import (
     ARL_R,
     calculate_cp,
     calculate_cpk,
+    calculate_ewma,
     calculate_means,
+    calculate_process_capability,
     calculate_ranges,
     calculate_standard_deviations,
     oc,
     oc_r,
     power,
     power_R,
-    calculate_process_capability,
 )
 
 __all__ = [
@@ -29,4 +30,5 @@ __all__ = [
     "calculate_cp",
     "calculate_cpk",
     "calculate_process_capability",
+    "calculate_ewma",
 ]

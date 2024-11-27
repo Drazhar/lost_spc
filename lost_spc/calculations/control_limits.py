@@ -7,7 +7,9 @@ from lost_spc.utils import get_sample_size
 from .spc_values import calculate_means, calculate_ranges, calculate_standard_deviations
 
 
-def calculate_control_limits(data: np.ndarray, chart_type: str = "X_R", z: int = 3) -> dict:
+def calculate_control_limits(
+    data: np.ndarray, chart_type: str = "X_R", z: int = 3, **kwargs
+) -> dict:
     """Calculates the control limits for different SPC charts (X̄, R, S, etc.).
 
     Args:
@@ -25,9 +27,10 @@ def calculate_control_limits(data: np.ndarray, chart_type: str = "X_R", z: int =
         >>> calculate_control_limits(data, chart_type='X_R')
         {'CL': 14.0, 'UCL': 17.069198123276216, 'LCL': 10.930801876723784}
     """
-    # Bestimme m und n automatisch für NumPy-Arrays
-    sample_size = get_sample_size(data)
-    m = sample_size.m  # Stichprobengröße
+    if chart_type != "EWMA":
+        # Bestimme m und n automatisch für NumPy-Arrays
+        sample_size = get_sample_size(data)
+        m = sample_size.m  # Stichprobengrösse
 
     # Berechne die Kontrollgrenzen basierend auf dem Kartentyp
     if chart_type == "X_R":
@@ -65,13 +68,20 @@ def calculate_control_limits(data: np.ndarray, chart_type: str = "X_R", z: int =
         means = calculate_means(data)
         std_devs = calculate_standard_deviations(data)
         X_mean = np.mean(means)
-        s_i = std_devs
-        s_mean = np.mean(s_i)
+        s_mean = np.mean(std_devs)
         c4 = get_c4(m)
         cl = X_mean
         factor = z * (s_mean / c4) / np.sqrt(m)
         ucl = cl + factor
         lcl = cl - factor
+    elif chart_type == "EWMA":
+        X_mean = np.mean(data)
+        s_mean = np.std(data)
+        lambda_ = kwargs.get("lambda_", 0.2)
+        cl = X_mean
+        asymptotic_sigma = s_mean * np.sqrt(lambda_ / (2 - lambda_))
+        ucl = cl + z * asymptotic_sigma
+        lcl = cl - z * asymptotic_sigma
     else:
         raise ValueError(f"Unsupported chart type: {chart_type}")
 

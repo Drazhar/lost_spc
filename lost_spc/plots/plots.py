@@ -3,20 +3,20 @@ import numpy as np
 import scipy.stats as st
 
 
-def shewhart_card(
+def plot_control_chart(
     UCL,
     CL,
     LCL,
     samples,
+    ax,
     calibration_samples=None,
     title="",
     ylabel="",
     fill_alpha=0.07,
     restrict_zero=True,
-    ax=None,
 ):
     """
-    Plots a shewhart_card. Draws either on an existing axis (ax) or creates a new figure.
+    Plots a control_card. Draws either on an existing axis (ax) or creates a new figure.
     """
     if restrict_zero:
         if LCL < 0:
@@ -26,11 +26,6 @@ def shewhart_card(
         x_min = -len(calibration_samples)
     else:
         x_min = 0
-
-    if ax is None:
-        fig, ax = plt.subplots()
-    else:
-        fig = None
 
     # Draw control limits
     ax.hlines([UCL, CL, LCL], x_min, len(samples) - 1, colors=["black"], alpha=0.8)
@@ -52,17 +47,89 @@ def shewhart_card(
     ax.fill_between(width, CL + 2 * area_height, UCL, alpha=fill_alpha, color="red")
     ax.fill_between(width, CL - 2 * area_height, LCL, alpha=fill_alpha, color="red")
 
+    # Plot setup
+    ax.set_title(title)
+    ax.set_xlabel("Sample")
+    ax.set_ylabel(ylabel)
+    ax.grid()
+
+    return ax
+
+
+def shewhart_card(
+    UCL,
+    CL,
+    LCL,
+    samples,
+    calibration_samples=None,
+    title="",
+    ylabel="",
+    fill_alpha=0.07,
+    restrict_zero=True,
+    ax=None,
+):
+    """
+    Plots a shewhart_card. Draws either on an existing axis (ax) or creates a new figure.
+    """
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = None
+
+    ax = plot_control_chart(
+        UCL, CL, LCL, samples, ax, calibration_samples, title, ylabel, fill_alpha, restrict_zero
+    )
+
     # Plot points
     if calibration_samples is not None:
         ax.vlines(0, ymin=LCL, ymax=UCL, colors=["red"], linestyles="dotted", alpha=0.6)
         ax.plot(range(-len(calibration_samples), 0, 1), calibration_samples, "o-")
     ax.plot(range(len(samples)), samples, "o-")
 
-    # Plot setup
-    ax.set_title(title)
-    ax.set_xlabel("Sample")
-    ax.set_ylabel(ylabel)
-    ax.grid()
+    return fig if fig else ax
+
+
+def ewma_card(
+    UCL,
+    CL,
+    LCL,
+    samples,
+    ewma_line,
+    lambda_,
+    calibration_samples=None,
+    calibration_ewma_line=None,
+    title="EWMA-Karte",
+    ylabel="",
+    fill_alpha=0.07,
+    restrict_zero=True,
+    ax=None,
+):
+    """
+    Plots a ewma_card. Draws either on an existing axis (ax) or creates a new figure.
+    """
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = None
+
+    ax = plot_control_chart(
+        UCL, CL, LCL, samples, ax, calibration_samples, title, ylabel, fill_alpha, restrict_zero
+    )
+
+    # Plot points
+    if calibration_samples is not None:
+        ax.vlines(0, ymin=LCL, ymax=UCL, colors=["red"], linestyles="dotted", alpha=0.6)
+        ax.plot(
+            range(-len(calibration_samples), 0, 1),
+            calibration_samples,
+            "o",
+            color="black",
+            alpha=0.2,
+        )
+        ax.plot(range(-len(calibration_samples), 0, 1), calibration_ewma_line, linewidth=1.5)
+
+    ax.plot(range(len(samples)), samples, "o", color="black", alpha=0.2)
+    ax.plot(range(len(ewma_line)), ewma_line, linewidth=1.5, label=f"EWMA (λ={lambda_})")
 
     return fig if fig else ax
 

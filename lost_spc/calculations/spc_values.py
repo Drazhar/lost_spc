@@ -263,3 +263,23 @@ def calculate_cpk(usl: float, lsl: float, mu: float, sigma: float) -> float:
     cp_upper = (usl - mu) / (3 * sigma)
     cp_lower = (mu - lsl) / (3 * sigma)
     return min(cp_upper, cp_lower)
+
+
+def calculate_ewma(X, lambda_):
+    """
+    Calculate the EWMA values recursively.
+
+    Args:
+    - X (numpy.ndarray): Input data to compute EWMA.
+    - lambda_ (float): Smoothing factor (0 < lambda_ ≤ 1).
+
+    Returns:
+    - numpy.ndarray: EWMA values.
+    """
+    if not 0 < lambda_ <= 1:
+        raise ValueError("lambda_ must be between 0 and 1.")
+
+    ewma = [np.mean(X[0])]
+    for i in range(1, len(X)):
+        ewma.append(lambda_ * np.mean(X[i]) + (1 - lambda_) * ewma[-1])
+    return np.array(ewma)
