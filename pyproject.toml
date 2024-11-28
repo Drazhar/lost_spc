@@ -51,3 +51,7 @@ line-length = 100
 
 [tool.ruff]
 line-length = 100
+
+[tool.pyright]
+typeCheckingMode = "basic"
+reportMissingTypeStubs = "none"
