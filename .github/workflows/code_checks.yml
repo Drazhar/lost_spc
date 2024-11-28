@@ -39,5 +39,5 @@ jobs:
       - name: Code complexity
         run: poetry run complexipy .
 
-      - name: Run doctests
+      - name: Run tests
         run: poetry run pytest
