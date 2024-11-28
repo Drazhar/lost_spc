@@ -10,7 +10,7 @@ from .spc_values import calculate_means, calculate_ranges, calculate_standard_de
 def calculate_control_limits(
     data: np.ndarray, chart_type: str = "X_R", z: int = 3, **kwargs
 ) -> dict:
-    """Calculates the control limits for different SPC charts (X̄, R, S, etc.).
+    """Calculates the control limits for different SPC charts (X_R, R, X_S, S or EWMA).
 
     Args:
         data (np.ndarray): The data for which the control limits are to be calculated.
