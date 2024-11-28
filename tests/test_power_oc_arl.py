@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from lost_spc.calculations.spc_values import ARL, ARL_R, oc, oc_r, power, power_R
-from lost_spc.constants import get_d
+from lost_spc.calculations.spc_values import ARL, ARL_R, oc, oc_r, power
 
 # power, OC und ARL x_bar-Karte
 k = np.linspace(-4, 4, 500)
@@ -40,19 +39,19 @@ plt.show()
 # power, OC und ARL x_bar-Karte R-Karte
 _, ax = plt.subplots(1, 2, figsize=(15, 5))
 
-l = np.linspace(1, 5, 500)
-ax[0].plot(l, oc_r(lam=l, m=5), label="m=5")
-ax[0].plot(l, oc_r(lam=l, m=10), label="m=10")
-ax[0].plot(l, oc_r(lam=l, m=15), label="m=15")
+lam = np.linspace(1, 5, 500)
+ax[0].plot(lam, oc_r(lam=lam, m=5), label="m=5")
+ax[0].plot(lam, oc_r(lam=lam, m=10), label="m=10")
+ax[0].plot(lam, oc_r(lam=lam, m=15), label="m=15")
 
 ax[0].legend()
 ax[0].grid()
 ax[0].set_xlabel("Verhältnis der Prozessstreuung in Phase II bzgl. Phase I")
 ax[0].set_title(r"Operationscharakteristik für die $R$-Karte")
 
-ax[1].plot(l, ARL_R(lam=l, m=5), label="m=5")
-ax[1].plot(l, ARL_R(lam=l, m=10), label="m=10")
-ax[1].plot(l, ARL_R(lam=l, m=15), label="m=15")
+ax[1].plot(lam, ARL_R(lam=lam, m=5), label="m=5")
+ax[1].plot(lam, ARL_R(lam=lam, m=10), label="m=10")
+ax[1].plot(lam, ARL_R(lam=lam, m=15), label="m=15")
 
 ax[1].legend()
 ax[1].grid()
@@ -77,10 +76,10 @@ ax[0].set_xlabel("$k = (\\mu_1 - \\mu_0) / \\sigma$")
 ax[0].set_title("ARL der $\\bar{X}$-Karte")
 
 # R-Karte
-l = np.linspace(1, 2, 500)
+lam = np.linspace(1, 2, 500)
 
 for m in [2, 3, 5, 10, 20]:
-    ax[1].plot(l, ARL_R(lam=l, m=m), label=f"m={m}")
+    ax[1].plot(lam, ARL_R(lam=lam, m=m), label=f"m={m}")
 
 ax[1].legend()
 ax[1].grid()

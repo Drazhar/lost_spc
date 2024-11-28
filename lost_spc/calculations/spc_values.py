@@ -119,7 +119,7 @@ def ARL(**kwargs) -> np.float64:
 
 
 # R card
-def oc_r(lam: float, m) -> float:
+def oc_r(lam: float | np.ndarray, m) -> float | np.ndarray:
     """Calculates the operational characteristic (OC) for the R and S charts.
 
     Args:
@@ -141,10 +141,10 @@ def oc_r(lam: float, m) -> float:
 
     T1 = st.norm.cdf(((1 - lam) * d2 - 3 * d3) / lam / d3)
     T2 = st.norm.cdf(((1 - lam) * d2 + 3 * d3) / lam / d3)
-    return float(T2 - T1)
+    return T2 - T1
 
 
-def power_R(lam: float, m: int) -> float:
+def power_R(lam: float | np.ndarray, m: int) -> float | np.ndarray:
     """Calculates the power of the test for the R chart.
 
     Args:
@@ -163,7 +163,9 @@ def power_R(lam: float, m: int) -> float:
     return 1 - oc_r(lam, m)
 
 
-def ARL_R(lam: float | None = None, m: int | None = None, oc: float | None = None) -> float:
+def ARL_R(
+    lam: float | np.ndarray | None = None, m: int | None = None, oc: float | None = None
+) -> float | np.ndarray:
     """Calculates the ARL based on lam and m or oc_r.
 
     Args:
@@ -190,7 +192,7 @@ def ARL_R(lam: float | None = None, m: int | None = None, oc: float | None = Non
     return 1 / (1 - operational_characteristic)
 
 
-def calculate_process_capability(lsl: float, usl: float, mu: float, sigma: float) -> np.ndarray:
+def calculate_process_capability(lsl: float, usl: float, mu: float, sigma: float) -> float:
     """
     Calculates the probability that the process is within the specification limits (LSL and USL).
 
@@ -211,7 +213,7 @@ def calculate_process_capability(lsl: float, usl: float, mu: float, sigma: float
     """
     lower_prob = st.norm.cdf((lsl - mu) / sigma)
     upper_prob = st.norm.cdf((usl - mu) / sigma)
-    return upper_prob - lower_prob
+    return float(upper_prob - lower_prob)
 
 
 def calculate_cp(usl: float, lsl: float, sigma: float, z: float = 6) -> float:
@@ -265,7 +267,7 @@ def calculate_cpk(usl: float, lsl: float, mu: float, sigma: float) -> float:
     return min(cp_upper, cp_lower)
 
 
-def calculate_ewma(X, lambda_):
+def calculate_ewma(X: np.ndarray, lambda_: float) -> np.ndarray:
     """
     Calculate the EWMA values recursively.
 
