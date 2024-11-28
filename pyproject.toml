@@ -24,6 +24,7 @@ isort = "^5.13.2"
 mkdocs-material = "^9.5.42"
 mkdocstrings-python = "^1.11.1"
 pytest = "^8.3.3"
+pytest-cov = "^6.0.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -31,7 +32,13 @@ build-backend = "poetry.core.masonry.api"
 
 # Testing
 [tool.pytest.ini_options]
-addopts = ["--cov-report=html", "--cov=lost_spc", "--doctest-modules", "--ff"]
+addopts = [
+  "--cov-report=html",
+  "--cov=lost_spc",
+  "--junitxml=pytest-results.xml",
+  "--doctest-modules",
+  "--ff",
+]
 
 # Linting
 [tool.flake8]
