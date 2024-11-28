@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lost-spc"
-version = "0.1.3"
+version = "0.2.1"
 description = ""
 authors = ["Philip Trauth <philip.trauth@ost.ch>"]
 license = "GPL-3.0"
