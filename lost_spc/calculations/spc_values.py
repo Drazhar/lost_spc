@@ -178,9 +178,9 @@ def ARL_R(
 
     Examples:
         >>> ARL_R(lam=1, m=5)
-        np.float64(370.3983473449564)
-        >>> ARL_R(oc_r=0.0027)
-        np.float64(1.002707309736288)
+        370.3983473449564
+        >>> ARL_R(oc=0.0027)
+        1.002707309736288
     """
     if lam is not None and m is not None:
         operational_characteristic = oc_r(lam, m)
@@ -188,6 +188,9 @@ def ARL_R(
         operational_characteristic = oc
     else:
         raise ValueError("Either lambda and m or oc have to be supplied!")
+
+    if not isinstance(operational_characteristic, np.ndarray):
+        operational_characteristic = float(operational_characteristic)
 
     return 1 / (1 - operational_characteristic)
 
@@ -207,9 +210,9 @@ def calculate_process_capability(lsl: float, usl: float, mu: float, sigma: float
 
     Examples:
         >>> calculate_process_capability(2.0, 8.0, 5.0, 1.0)
-        np.float64(0.9973002039367398)
+        0.9973002039367398
         >>> calculate_process_capability(0.0, 10.0, 5.0, 2.0)
-        np.float64(0.9875806693484477)
+        0.9875806693484477
     """
     lower_prob = st.norm.cdf((lsl - mu) / sigma)
     upper_prob = st.norm.cdf((usl - mu) / sigma)
