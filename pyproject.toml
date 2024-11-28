@@ -29,6 +29,11 @@ complexipy = "^0.5.0"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+# Testing
+[tool.pytest.ini_options]
+addopts = "--doctest-modules"
+
+# Linting
 [tool.flake8]
 max-line-length = 100
 exclude = [".git", "__pycache__"]
