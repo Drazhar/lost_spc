@@ -1,8 +1,11 @@
 # Python
-.venv
-dist
-__pycache__
 .hypothesis
+.venv
+__pycache__
+dist
 
 # Pytest
+.coverage
+htmlcov
+pytest-results.xml
 site
