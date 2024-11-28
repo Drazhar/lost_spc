@@ -24,9 +24,6 @@ def get_sample_size(data: np.ndarray) -> SampleSize:
         >>> get_sample_size(data)
         SampleSize(m=3, n=2)
     """
-    if isinstance(data, np.ndarray):
-        m = data.shape[1]  # Stichprobengrösse
-        n = data.shape[0]  # Anzahl Stichproben
-        return SampleSize(m=m, n=n)
-    else:
-        raise TypeError("Input data must be a NumPy array.")
+    m = data.shape[1]  # Stichprobengrösse
+    n = data.shape[0]  # Anzahl Stichproben
+    return SampleSize(m=m, n=n)
