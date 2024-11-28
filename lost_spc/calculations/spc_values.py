@@ -119,11 +119,11 @@ def ARL(**kwargs) -> np.float64:
 
 
 # R card
-def oc_r(lam: np.ndarray, m) -> np.ndarray:
+def oc_r(lam: float, m) -> float:
     """Calculates the operational characteristic (OC) for the R and S charts.
 
     Args:
-        lam (float): Lambda -> Deviation from sigma0
+        lam (float): lambda -> Deviation from sigma0
         m (int): Measurements per sample
 
     Returns:
@@ -141,14 +141,14 @@ def oc_r(lam: np.ndarray, m) -> np.ndarray:
 
     T1 = st.norm.cdf(((1 - lam) * d2 - 3 * d3) / lam / d3)
     T2 = st.norm.cdf(((1 - lam) * d2 + 3 * d3) / lam / d3)
-    return T2 - T1
+    return float(T2 - T1)
 
 
-def power_R(lam: np.ndarray, m: int) -> np.ndarray:
+def power_R(lam: float, m: int) -> float:
     """Calculates the power of the test for the R chart.
 
     Args:
-        lam (float): Lambda -> Deviation from sigma1 to sigma0.
+        lam (float): lambda -> Deviation from sigma1 to sigma0.
         m (int): Number of measurements per sample.
 
     Returns:
@@ -163,13 +163,13 @@ def power_R(lam: np.ndarray, m: int) -> np.ndarray:
     return 1 - oc_r(lam, m)
 
 
-def ARL_R(**kwargs) -> np.float64:
+def ARL_R(lam: float | None = None, m: int | None = None, oc: float | None = None) -> float:
     """Calculates the ARL based on lam and m or oc_r.
 
     Args:
-        lam (float): Lambda -> Deviation from sigma1 to sigma0
+        lam (float): lambda -> Deviation from sigma1 to sigma0
         m: Measurements per sample
-        oc_r (float): Operational characteristic for the R chart
+        oc (float): Operational characteristic for the R chart
 
     Returns:
         float: Average Run Length (ARL) for the R chart.
@@ -180,14 +180,14 @@ def ARL_R(**kwargs) -> np.float64:
         >>> ARL_R(oc_r=0.0027)
         np.float64(1.002707309736288)
     """
-    if "lam" in kwargs and "m" in kwargs:
-        operational_characteristic = oc_r(lam=kwargs["lam"], m=kwargs["m"])
-    elif "oc_r" in kwargs:
-        operational_characteristic = kwargs["oc_r"]
+    if lam is not None and m is not None:
+        operational_characteristic = oc_r(lam, m)
+    elif oc is not None:
+        operational_characteristic = oc
     else:
-        raise ValueError("Either lambda and m or oc_r have to be supplied!")
+        raise ValueError("Either lambda and m or oc have to be supplied!")
 
-    return np.float64(1 / (1 - operational_characteristic))
+    return 1 / (1 - operational_characteristic)
 
 
 def calculate_process_capability(lsl: float, usl: float, mu: float, sigma: float) -> np.ndarray:
