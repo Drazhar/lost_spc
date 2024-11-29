@@ -14,6 +14,7 @@ def plot_control_chart(
     ylabel="",
     fill_alpha=0.07,
     restrict_zero=True,
+    draw_colors_limits=True,
 ):
     """
     Plots a control_card. Draws either on an existing axis (ax) or creates a new figure.
@@ -27,25 +28,30 @@ def plot_control_chart(
     else:
         x_min = 0
 
-    # Draw control limits
     ax.hlines([UCL, CL, LCL], x_min, len(samples) - 1, colors=["black"], alpha=0.8)
-    area_height = (UCL - CL) / 3
-    ax.hlines(
-        [CL + area_height, CL + 2 * area_height, CL - area_height, CL - 2 * area_height],
-        x_min,
-        len(samples) - 1,
-        colors=["black"],
-        alpha=0.3,
-        linestyles="dashed",
-    )
+    if draw_colors_limits:
+        # Draw control limits
+        area_height = (UCL - CL) / 3
+        ax.hlines(
+            [CL + area_height, CL + 2 * area_height, CL - area_height, CL - 2 * area_height],
+            x_min,
+            len(samples) - 1,
+            colors=["black"],
+            alpha=0.3,
+            linestyles="dashed",
+        )
 
-    # Add some coloring for the areas
-    width = (x_min, len(samples) - 1)
-    ax.fill_between(width, CL - area_height, CL + area_height, alpha=fill_alpha, color="green")
-    ax.fill_between(width, CL + area_height, CL + 2 * area_height, alpha=fill_alpha, color="yellow")
-    ax.fill_between(width, CL - area_height, CL - 2 * area_height, alpha=fill_alpha, color="yellow")
-    ax.fill_between(width, CL + 2 * area_height, UCL, alpha=fill_alpha, color="red")
-    ax.fill_between(width, CL - 2 * area_height, LCL, alpha=fill_alpha, color="red")
+        # Add some coloring for the areas
+        width = (x_min, len(samples) - 1)
+        ax.fill_between(width, CL - area_height, CL + area_height, alpha=fill_alpha, color="green")
+        ax.fill_between(
+            width, CL + area_height, CL + 2 * area_height, alpha=fill_alpha, color="yellow"
+        )
+        ax.fill_between(
+            width, CL - area_height, CL - 2 * area_height, alpha=fill_alpha, color="yellow"
+        )
+        ax.fill_between(width, CL + 2 * area_height, UCL, alpha=fill_alpha, color="red")
+        ax.fill_between(width, CL - 2 * area_height, LCL, alpha=fill_alpha, color="red")
 
     # Plot setup
     ax.set_title(title)
@@ -130,6 +136,49 @@ def ewma_card(
 
     ax.plot(range(len(samples)), samples, "o", color="black", alpha=0.2)
     ax.plot(range(len(ewma_line)), ewma_line, linewidth=1.5, label=f"EWMA (λ={lambda_})")
+
+    return fig if fig else ax
+
+
+def T_card(
+    UCL,
+    CL,
+    LCL,
+    samples,
+    calibration_samples=None,
+    title="",
+    ylabel="",
+    fill_alpha=0.07,
+    restrict_zero=True,
+    ax=None,
+):
+    """
+    Plots a T_card. Draws either on an existing axis (ax) or creates a new figure.
+    """
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = None
+
+    ax = plot_control_chart(
+        UCL,
+        CL,
+        LCL,
+        samples,
+        ax,
+        calibration_samples,
+        title,
+        ylabel,
+        fill_alpha,
+        restrict_zero,
+        draw_colors_limits=False,
+    )
+
+    # Plot points
+    if calibration_samples is not None:
+        ax.vlines(0, ymin=LCL, ymax=UCL, colors=["red"], linestyles="dotted", alpha=0.6)
+        ax.plot(range(-len(calibration_samples), 0, 1), calibration_samples, "o-")
+    ax.plot(range(len(samples)), samples, "o-")
 
     return fig if fig else ax
 

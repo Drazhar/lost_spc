@@ -2,6 +2,7 @@ import numpy as np
 import scipy.stats as st
 
 from lost_spc.constants import get_d
+from lost_spc.utils import get_sample_size
 
 
 def calculate_means(data: np.ndarray) -> np.ndarray:
@@ -288,3 +289,51 @@ def calculate_ewma(X: np.ndarray, lambda_: float) -> np.ndarray:
     for i in range(1, len(X)):
         ewma.append(lambda_ * np.mean(X[i]) + (1 - lambda_) * ewma[-1])
     return np.array(ewma)
+
+
+def calculate_T(X: np.ndarray, Y: np.ndarray) -> np.ndarray:
+    m = get_sample_size(X).m
+    cov = calculate_cov(X, Y)
+    inv_cov = calculate_inv_cov(cov)
+    x1_mean = calculate_means(X)
+    x2_mean = calculate_means(Y)
+    x_mean_mean = np.array([x1_mean.mean(), x2_mean.mean()])
+    T = []
+    for x1, x2 in zip(x1_mean, x2_mean):
+        x_mean = np.array([x1, x2])
+        t1 = x_mean - x_mean_mean
+
+        T.append(m * np.dot(np.dot(t1.T, inv_cov), t1))
+
+    return np.array(T)
+
+
+def calc_b(m, p=2):
+    p_range = np.arange(1, p + 1)
+    b1 = 1 / (m - 1) ** p * (m - p_range).prod()
+    b2 = (
+        1
+        / (m - 1) ** (2 * p)
+        * (m - p_range).prod()
+        * ((m - p_range + 2).prod() - (m - p_range).prod())
+    )
+    return b1, b2
+
+
+def calculate_S(X: np.ndarray, Y: np.ndarray):
+    S = []
+    for x_i, y_i in zip(X, Y):
+        S.append(np.linalg.det(np.cov(np.array([x_i, y_i]))))
+    return S
+
+
+def calculate_cov(X: np.ndarray, Y: np.ndarray) -> np.ndarray:
+    X_flat = X.flatten()
+    Y_flat = Y.flatten()
+    cov = np.cov(np.vstack((X_flat, Y_flat)))
+    return cov
+
+
+def calculate_inv_cov(cov: np.ndarray) -> np.ndarray:
+    inv_cov = np.linalg.pinv(cov)
+    return inv_cov

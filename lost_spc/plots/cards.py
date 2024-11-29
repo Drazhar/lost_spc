@@ -1,12 +1,15 @@
 from lost_spc.calculations import (
     calculate_control_limits,
+    calculate_cov,
     calculate_ewma,
     calculate_means,
     calculate_ranges,
+    calculate_S,
     calculate_standard_deviations,
+    calculate_T,
 )
 
-from .plots import ewma_card, shewhart_card
+from .plots import T_card, ewma_card, shewhart_card
 
 
 class R:
@@ -118,7 +121,7 @@ class S:
 
 
 class X_S:
-    def __init__(self, z=3, plot_calibration_data=False, restrict_zero=True):
+    def __init__(self, z=3, plot_calibration_data=True, restrict_zero=True):
         self.z = z
         self.plot_calibration_data = plot_calibration_data
         self.restrict_zero = restrict_zero
@@ -154,7 +157,7 @@ class X_S:
 
 
 class EWMA:
-    def __init__(self, z=3, lambda_=0.2, plot_calibration_data=False, restrict_zero=True):
+    def __init__(self, z=3, lambda_=0.2, plot_calibration_data=True, restrict_zero=True):
         self.z = z
         self.lambda_ = lambda_
         self.plot_calibration_data = plot_calibration_data
@@ -194,6 +197,81 @@ class EWMA:
             calibration_ewma_line=cal_ewma_line,
             title=r"$EWMA$-Karte",
             ylabel="",
+            restrict_zero=self.restrict_zero,
+            ax=ax,
+        )
+        return fig
+
+
+class T:
+    def __init__(self, z=3, plot_calibration_data=False, restrict_zero=True, p=2):
+        self.z = z
+        self.plot_calibration_data = plot_calibration_data
+        self.restrict_zero = restrict_zero
+        self.p = p
+
+    def fit(self, X, Y):
+        control_limits = calculate_control_limits(X, chart_type="T", z=self.z, p=self.p)
+        self.UCL = control_limits["UCL"]
+        self.CL = control_limits["CL"]
+        self.LCL = control_limits["LCL"]
+        if self.LCL < 0 and self.restrict_zero:
+            self.LCL = 0
+        if self.plot_calibration_data:
+            self.T_values_cal = calculate_T(X, Y)
+
+    def transform(self, X, Y, ax=None):
+        samples = calculate_T(X, Y)
+        if self.plot_calibration_data:
+            cal_samples = self.T_values_cal
+        else:
+            cal_samples = None
+        fig = T_card(
+            self.UCL,
+            self.CL,
+            self.LCL,
+            samples,
+            cal_samples,
+            title=r"$T$-Karte",
+            ylabel="",
+            restrict_zero=self.restrict_zero,
+            ax=ax,
+        )
+        return fig
+
+
+class m_S:
+    def __init__(self, z=3, plot_calibration_data=False, restrict_zero=True, p=2):
+        self.z = z
+        self.plot_calibration_data = plot_calibration_data
+        self.restrict_zero = restrict_zero
+        self.p = p
+
+    def fit(self, X, Y):
+        cov = calculate_cov(X, Y)
+        control_limits = calculate_control_limits(X, chart_type="S", z=self.z, cov=cov)
+        self.UCL = control_limits["UCL"]
+        self.CL = control_limits["CL"]
+        self.LCL = control_limits["LCL"]
+        if self.LCL < 0 and self.restrict_zero:
+            self.LCL = 0
+        if self.plot_calibration_data:
+            self.T_values_cal = calculate_S(X, Y)
+
+    def transform(self, X, Y, ax=None):
+        samples = calculate_S(X, Y)
+        if self.plot_calibration_data:
+            cal_samples = self.T_values_cal
+        else:
+            cal_samples = None
+        fig = shewhart_card(
+            self.UCL,
+            self.CL,
+            self.LCL,
+            samples,
+            calibration_samples=cal_samples,
+            title=r"$\|S\|$-Karte",
+            ylabel=r"$\|S\|_i$",
             restrict_zero=self.restrict_zero,
             ax=ax,
         )

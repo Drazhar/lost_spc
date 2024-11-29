@@ -4,17 +4,17 @@ import scipy.stats as st
 from lost_spc.constants import get_c4, get_d
 from lost_spc.utils import get_sample_size
 
-from .spc_values import calculate_means, calculate_ranges, calculate_standard_deviations
+from .spc_values import calc_b, calculate_means, calculate_ranges, calculate_standard_deviations
 
 
 def calculate_control_limits(
     data: np.ndarray, chart_type: str = "X_R", z: int = 3, **kwargs
 ) -> dict:
-    """Calculates the control limits for different SPC charts (X_R, R, X_S, S or EWMA).
+    """Calculates the control limits for different SPC charts (X_R, R, X_S, S, EWMA, T, or m_S).
 
     Args:
         data (np.ndarray): The data for which the control limits are to be calculated.
-        chart_type (str): Type of chart ('X_R', 'R', 'S' or 'X_S'). Determines
+        chart_type (str): Type of chart ('X_R', 'R', 'X_S', 'S', 'EWMA', 'T', or 'm_S'). Determines
                           the control limits' calculations.
         z (int): The number of standard deviations for control limits. Default is 3.
 
@@ -82,6 +82,18 @@ def calculate_control_limits(
         asymptotic_sigma = s_mean * np.sqrt(lambda_ / (2 - lambda_))
         ucl = cl + z * asymptotic_sigma
         lcl = cl - z * asymptotic_sigma
+    elif chart_type == "T":
+        alpha = 2 * (1 - st.norm.cdf(z))
+        p = kwargs.get("p", 2)
+        ucl = st.chi2.ppf(1 - alpha, p)
+        cl = ucl / 2
+        lcl = 0
+    elif chart_type == "S":
+        cov = kwargs.get("cov", 2)
+        b1, b2 = calc_b(m, 2)
+        ucl = (np.linalg.det(cov) / b1) * (b1 + 3 * b2**0.5)
+        cl = b1 * np.linalg.det(cov)
+        lcl = (np.linalg.det(cov) / b1) * (b1 - 3 * b2**0.5)
     else:
         raise ValueError(f"Unsupported chart type: {chart_type}")
 
